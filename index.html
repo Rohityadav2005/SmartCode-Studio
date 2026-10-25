@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartCode Studio - Interactive Modern IDE & Learning Platform</title>
+  <meta name="description" content="A modern web-based IDE and interactive coding learning platform with Monaco Editor, real-time diagnostics, smart IntelliSense, and multi-language execution for Python, SQL, and JavaScript.">
+  
+  <!-- Modern Google Fonts: DM Sans & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons for clean IDE symbols -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- AlaSQL for in-browser SQL execution with real tables -->
+  <script src="https://cdn.jsdelivr.net/npm/alasql@4.1.2/dist/alasql.min.js"></script>
+  
+  <!-- Monaco Editor loader -->
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-dark">
+  <!-- Main IDE Wrapper -->
+  <div id="app-container" class="app-container">
+    
+    <!-- Top Global Header / Navigation Bar -->
+    <header id="ide-header" class="ide-header">
+      <div class="header-left">
+        <div class="brand-badge">
+          <span class="brand-title">SmartCode <span class="brand-highlight">Studio</span></span>
+        </div>
+      </div>
+
+      <!-- Center: Guided Learning & Sandbox Playground -->
+      <div class="header-center">
+        <div class="mode-tabs" role="tablist">
+          <button id="mode-learning" class="mode-tab active" data-mode="learning" title="Learn with guided tracks & interactive challenges">
+            <i class="fa-solid fa-graduation-cap"></i> Guided Learning
+          </button>
+          <button id="mode-playground" class="mode-tab" data-mode="playground" title="Open full-screen sandbox code playground">
+            <i class="fa-solid fa-flask"></i> Sandbox Playground
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Toolbar: Language Switcher, Theme, Actions -->
+      <div class="header-right">
+        <!-- Language Select -->
+        <div class="select-wrapper">
+          <label for="language-select" class="sr-only">Language</label>
+          <i class="fa-solid fa-code"></i>
+          <select id="language-select" title="Change Editor Language">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="sql">SQL</option>
+          </select>
+        </div>
+
+        <button id="btn-run-code" class="btn-action btn-primary" title="Execute Code (Ctrl + Enter)">
+          <i class="fa-solid fa-play"></i>
+        </button>
+
+        <button id="btn-submit-code" class="btn-action btn-success" title="Submit Solution for Testing">
+          <i class="fa-solid fa-circle-check"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace Area -->
+    <div class="workspace-body">
+      
+      <!-- Far-Left Activity Bar -->
+      <aside class="activity-bar" id="activity-bar">
+        <button class="activity-btn active" id="act-lessons" data-panel="panel-curriculum" title="Learning Curriculum">
+          <i class="fa-solid fa-book-open"></i>
+          <span class="activity-label">Learn</span>
+        </button>
+        <button class="activity-btn" id="act-explorer" data-panel="panel-explorer" title="Files & Snippets">
+          <i class="fa-regular fa-folder-open"></i>
+          <span class="activity-label">Files</span>
+        </button>
+        <a href="quiz.html" class="activity-btn" id="act-challenges" title="Coding Quiz Arena (30 Qs per Level)" style="text-decoration: none;">
+          <i class="fa-solid fa-trophy" style="color: var(--accent-gold);"></i>
+          <span class="activity-label">Quizzes</span>
+        </a>
+        <button class="activity-btn" id="act-docs" data-panel="panel-docs" title="IntelliSense & Quick Reference">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="activity-label">Docs</span>
+        </button>
+        
+        <div class="activity-spacer"></div>
+
+        <a href="dashboard.html" class="activity-btn" id="act-dashboard" title="RPG Overworld & Progress Dashboard" style="text-decoration: none;">
+          <i class="fa-solid fa-map-location-dot" style="color: var(--accent-gold);"></i>
+          <span class="activity-label">Map</span>
+        </a>
+        <button class="activity-btn" id="act-settings" data-panel="panel-settings" title="Editor Settings">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      </aside>
+
+      <!-- Collapsible Sidebar (Curriculum / Explorer / Challenges / Docs) -->
+      <aside class="side-panel" id="side-panel">
+        
+        <!-- Tab 1: Curriculum & Lessons Panel -->
+        <div class="panel-view active" id="panel-curriculum">
+          <div class="panel-header">
+            <h3>Learning Pathways</h3>
+            <span class="badge-pill" id="overall-progress-badge">0/9 Done</span>
+          </div>
+
+          <!-- Track Selector Tabs -->
+          <div class="curriculum-track-tabs">
+            <button class="track-tab active" data-track="python">
+              <i class="fa-brands fa-python"></i> Python
+            </button>
+            <button class="track-tab" data-track="javascript">
+              <i class="fa-brands fa-js"></i> JavaScript
+            </button>
+            <button class="track-tab" data-track="sql">
+              <i class="fa-solid fa-database"></i> SQL
+            </button>
+          </div>
+
+          <!-- Lessons List -->
+          <div class="lessons-scroll-list" id="lessons-list">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+
+        <!-- Tab 2: Explorer / Sample Files Panel -->
+        <div class="panel-view" id="panel-explorer">
+          <div class="panel-header">
+            <h3>Workspace Files</h3>
+            <button class="icon-btn-sm" id="btn-new-file" title="Create New Scratch File">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+          <!-- New File Input Box -->
+          <div class="new-file-box" id="new-file-box" style="display: none;">
+            <div class="new-file-input-wrapper">
+              <i class="fa-solid fa-file-code"></i>
+              <input type="text" id="new-file-input" placeholder="filename.py, app.js, data.sql..." autocomplete="off" spellcheck="false">
+              <button class="icon-btn-sm" id="btn-confirm-new-file" title="Create File">
+                <i class="fa-solid fa-check"></i>
+              </button>
+              <button class="icon-btn-sm" id="btn-cancel-new-file" title="Cancel (Esc)">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+          <div class="explorer-tree" id="explorer-tree">
+            <!-- Sample files for fast switching -->
+          </div>
+        </div>
+
+        <!-- Tab 3: Challenges & Quizzes Panel -->
+        <div class="panel-view" id="panel-challenges">
+          <div class="panel-header">
+            <h3>Coding Quizzes</h3>
+            <span class="xp-counter"><i class="fa-solid fa-bolt"></i> <span id="user-xp">120</span> XP</span>
+          </div>
+          <div class="challenges-list" id="challenges-list">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Tab 4: Quick Reference & Syntax Docs -->
+        <div class="panel-view" id="panel-docs">
+          <div class="panel-header">
+            <h3>Language Cheat Sheet</h3>
+          </div>
+          <div class="docs-content" id="docs-content">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Tab 5: Editor Settings Panel -->
+        <div class="panel-view" id="panel-settings">
+          <div class="panel-header">
+            <h3>IDE Preferences</h3>
+          </div>
+          <div class="settings-list">
+            <div class="setting-item">
+              <label for="theme-select"><i class="fa-solid fa-palette"></i> Visual Theme</label>
+              <select id="theme-select" title="Change Visual Theme">
+                <option value="vs-dark">VS Dark+ (Default)</option>
+                <option value="vs">Light</option>
+                <option value="hc-black">High Contrast</option>
+                <option value="cyberpunk">Cyberpunk Neon</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="setting-font-size">Font Size</label>
+              <select id="setting-font-size">
+                <option value="12">12px</option>
+                <option value="14" selected>14px (Recommended)</option>
+                <option value="16">16px</option>
+                <option value="18">18px</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="setting-tab-size">Tab Size</label>
+              <select id="setting-tab-size">
+                <option value="2">2 Spaces</option>
+                <option value="4" selected>4 Spaces (Python Std)</option>
+              </select>
+            </div>
+            <div class="setting-item checkbox-item">
+              <label><input type="checkbox" id="setting-minimap" checked> Show Minimap</label>
+            </div>
+            <div class="setting-item checkbox-item">
+              <label><input type="checkbox" id="setting-linters" checked> Real-time Diagnostics Linting</label>
+            </div>
+            <div class="setting-item checkbox-item">
+              <label><input type="checkbox" id="setting-autoclose" checked> Auto-Close Brackets & Quotes</label>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Sidebar Resizer Divider -->
+      <div class="resizer horizontal-resizer" id="resizer-sidebar"></div>
+
+      <!-- Center Workspace (Lesson Guide + Editor + Terminal) -->
+      <main class="main-editor-stage" id="main-editor-stage">
+        
+        <!-- Upper Split: Lesson Instructions + Code Editor -->
+        <div class="editor-top-split" id="editor-top-split">
+          
+          <!-- AI Assistant & Learning Section (Collapsible) -->
+          <section class="lesson-pane ai-section-pane" id="lesson-pane">
+            
+            <!-- Pane Navigation Bar: AI Section (Primary) vs Lesson Guide -->
+            <div class="ai-pane-nav">
+              <div class="ai-nav-tabs">
+                <button class="ai-nav-tab active" id="tab-nav-ai" title="AI Coding Assistant">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                  <span>Qwen AI</span>
+                  <span class="ai-model-chip">3b</span>
+                </button>
+                <button class="ai-nav-tab" id="tab-nav-lesson" title="Curriculum Lesson Guide">
+                  <i class="fa-solid fa-book-open"></i>
+                  <span>Lesson Guide</span>
+                </button>
+              </div>
+              <div class="ai-nav-actions">
+                <button class="icon-btn-sm" id="btn-clear-ai" title="Clear Chat History">
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
+                <button class="icon-btn-sm" id="btn-toggle-lesson" title="Collapse Section">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Tab 1: AI Section View (Active by Default) -->
+            <div class="ai-view-container" id="ai-view-container">
+              
+              <!-- Chat Messages Feed -->
+              <div class="ai-chat-feed" id="ai-chat-feed">
+                <!-- Welcome Assistant Message -->
+                <div class="ai-assistant-wrapper">
+                  <div class="ai-msg-actions-hover">
+                    <button class="msg-action-btn" title="Copy"><i class="fa-regular fa-copy"></i></button>
+                    <button class="msg-action-btn" title="Helpful"><i class="fa-regular fa-thumbs-up"></i></button>
+                    <button class="msg-action-btn" title="Not helpful"><i class="fa-regular fa-thumbs-down"></i></button>
+                  </div>
+                  <div class="ai-process-badges">
+                    <div class="ai-process-pill">
+                      <span>Ready</span> <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                  </div>
+                  <div class="ai-msg-content">
+                    <p>I am your <strong>Qwen2.5-Coder:3b</strong> assistant. I can inspect your active code in the editor, diagnose errors, explain programming concepts, or write unit tests.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Bar & Input Area matching reference screenshot -->
+              <div class="ai-input-area">
+                <!-- Review Changes Bar -->
+                <div class="ai-diff-review-bar">
+                  <button class="btn-review-changes" id="btn-review-changes" title="Review code changes">
+                    <i class="fa-solid fa-code-compare"></i> Review Changes
+                  </button>
+                </div>
+
+                <!-- Unified Rounded Input Card Container -->
+                <div class="ai-unified-input-card">
+                  <div class="ai-input-card-textarea-wrapper">
+                    <textarea 
+                      id="ai-prompt-input" 
+                      placeholder="Ask anything, @ to mention, / for actions" 
+                      rows="1"
+                    ></textarea>
+                  </div>
+                  <div class="ai-input-card-toolbar">
+                    <div class="ai-toolbar-left">
+                      <button class="ai-tool-icon-btn" id="btn-ai-plus" title="Add context (@)">
+                        <i class="fa-solid fa-plus"></i>
+                      </button>
+                      <button class="ai-model-selector-pill" id="ai-model-picker" title="Model: qwen2.5-coder:3b">
+                        <span id="current-ai-model">qwen2.5-coder:3b</span>
+                        <i class="fa-solid fa-chevron-up"></i>
+                      </button>
+                    </div>
+                    <div class="ai-toolbar-right">
+                      <button class="ai-tool-icon-btn" id="btn-ai-mic" title="Voice Input">
+                        <i class="fa-solid fa-microphone"></i>
+                      </button>
+                      <button class="ai-circle-send-btn" id="btn-ai-send" title="Send (Enter)">
+                        <i class="fa-solid fa-arrow-right"></i>
+                      </button>
+                      <button class="ai-circle-send-btn ai-stop-btn hidden" id="btn-ai-stop" title="Stop generating" style="display: none;">
+                        <i class="fa-solid fa-square"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Tab 2: Curriculum Lesson Guide (Can be toggled) -->
+            <div class="lesson-view-container hidden" id="lesson-view-container">
+              <div class="lesson-pane-header">
+                <div class="lesson-title-box">
+                  <span class="lesson-badge" id="lesson-category">Module 1</span>
+                  <h2 id="lesson-headline">Introduction to Variables</h2>
+                </div>
+              </div>
+
+              <div class="lesson-pane-body" id="lesson-instructions-content">
+                <!-- Rendered via JS -->
+              </div>
+
+              <!-- Hint & Solution Accordion -->
+              <div class="lesson-footer-accordion">
+                <button class="accordion-trigger" id="btn-hint-accordion">
+                  <i class="fa-regular fa-lightbulb"></i> Need a Hint?
+                  <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                </button>
+                <div class="accordion-content" id="hint-content">
+                  <p id="hint-text">Remember to assign values using the equal (=) sign in Python.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Vertical Splitter between Lesson and Code Editor -->
+          <div class="resizer horizontal-resizer" id="resizer-lesson"></div>
+
+          <!-- Monaco Editor Workspace -->
+          <section class="code-editor-wrapper" id="code-editor-wrapper">
+            <!-- Editor Top Tabs -->
+            <div class="editor-tabs-bar">
+              <div class="tabs-list" id="editor-tabs">
+                <div class="tab-item active" id="tab-main" data-file="solution.py">
+                  <i class="fa-brands fa-python tab-icon" id="current-tab-icon"></i>
+                  <span class="tab-label" id="current-file-label">solution.py</span>
+                  <span class="modified-dot"></span>
+                </div>
+              </div>
+              <button class="icon-btn-sm btn-new-tab" id="btn-new-tab" title="Create New File (Ctrl+N)">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+
+              <!-- Quick Editor Tools -->
+              <div class="editor-quick-tools">
+                <span class="marker-count" id="editor-error-badge" title="Errors & Warnings">
+                  <i class="fa-solid fa-circle-exclamation error-icon"></i> <span id="error-count">0</span>
+                  <i class="fa-solid fa-triangle-exclamation warning-icon"></i> <span id="warning-count">0</span>
+                </span>
+                <button class="icon-btn-sm" id="btn-editor-expand" title="Toggle Fullscreen Editor">
+                  <i class="fa-solid fa-expand"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Monaco Editor Mount Point -->
+            <div id="monaco-editor-container" class="monaco-container">
+              <!-- Monaco attaches here -->
+              <div class="monaco-loading-placeholder">
+                <div class="spinner"></div>
+                <p>Initializing Monaco Editor Core & Language Services...</p>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Horizontal Resizer between Editor and Bottom Panel -->
+        <div class="resizer vertical-resizer" id="resizer-bottom"></div>
+
+        <!-- Bottom Panel: Output Console, Test Results, Diagnostics & Table View -->
+        <section class="bottom-panel" id="bottom-panel">
+          <div class="bottom-tabs-bar">
+            <div class="tabs-group">
+              <button class="bottom-tab active" data-target="console-view">
+                <i class="fa-solid fa-terminal"></i> Console Output
+              </button>
+              <button class="bottom-tab" data-target="test-runner-view">
+                <i class="fa-solid fa-vial-circle-check"></i> Test Cases & Validation
+                <span class="badge-mini test-status-badge" id="tests-summary-badge">Ready</span>
+              </button>
+              <button class="bottom-tab" data-target="diagnostics-view">
+                <i class="fa-solid fa-bugs"></i> Problems / Linting
+                <span class="badge-mini" id="diagnostics-count-badge">0</span>
+              </button>
+              <button class="bottom-tab" data-target="table-view" id="tab-sql-table">
+                <i class="fa-solid fa-table"></i> SQL Table Visualizer
+              </button>
+            </div>
+
+            <div class="bottom-actions">
+              <button class="btn-clean" id="btn-clear-console" title="Clear Console">
+                <i class="fa-solid fa-trash-can"></i> Clear
+              </button>
+              <button class="icon-btn-sm" id="btn-toggle-bottom" title="Minimize / Restore Panel">
+                <i class="fa-solid fa-chevron-down"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bottom Views -->
+          <div class="bottom-views-wrapper">
+            <!-- 1. Console Output View -->
+            <div class="bottom-view active" id="console-view">
+              <div class="console-output" id="console-output-text">
+                <div class="console-welcome">
+                  <span class="welcome-badge">SmartCode Engine Ready</span>
+                  <p>Welcome to SmartCode Studio! Press <strong>Run Code</strong> (Ctrl + Enter) or <strong>Submit</strong> to evaluate your solution.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Test Runner View -->
+            <div class="bottom-view" id="test-runner-view">
+              <div class="tests-container" id="tests-container">
+                <div class="tests-empty">Run your code or click "Submit" to see test assertions and results.</div>
+              </div>
+            </div>
+
+            <!-- 3. Diagnostics & Problems View -->
+            <div class="bottom-view" id="diagnostics-view">
+              <div class="problems-table-container">
+                <table class="problems-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 100px;">Severity</th>
+                      <th style="width: 90px;">Line</th>
+                      <th>Message</th>
+                      <th style="width: 120px;">Source</th>
+                    </tr>
+                  </thead>
+                  <tbody id="problems-tbody">
+                    <tr>
+                      <td colspan="4" class="no-problems">
+                        <i class="fa-solid fa-circle-check"></i> No syntax errors or lint warnings detected.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 4. SQL Data Table Visualizer -->
+            <div class="bottom-view" id="table-view">
+              <div class="sql-table-container" id="sql-table-container">
+                <div class="sql-empty-prompt">Execute a SQL query (e.g. <code>SELECT * FROM employees;</code>) to view records in tabular format.</div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+
+    <!-- Bottom Status Bar (VS Code Style) -->
+    <footer class="ide-status-bar" id="ide-status-bar">
+      <div class="status-left">
+        <span class="status-item" id="status-diagnostics" title="Problems detected">
+          <i class="fa-solid fa-circle-xmark status-err"></i> <span id="status-error-val">0</span>
+          <i class="fa-solid fa-triangle-exclamation status-warn"></i> <span id="status-warn-val">0</span>
+        </span>
+        <span class="status-separator">|</span>
+        <span class="status-item" id="status-lang-display">Python 3</span>
+        <span class="status-separator">|</span>
+        <span class="status-item" id="status-cursor">Ln 1, Col 1</span>
+        <span class="status-separator">|</span>
+        <span class="status-item">UTF-8</span>
+      </div>
+
+      <div class="status-right">
+        <span class="status-item" id="status-indent">Spaces: 4</span>
+        <span class="status-separator">|</span>
+        <span class="status-item" title="Engine Status"><i class="fa-solid fa-bolt text-success"></i> SmartCode IntelliSense Active</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Application Logic Scripts -->
+  <script src="js/curriculum.js"></script>
+  <script src="js/diagnostics.js"></script>
+  <script src="js/runner.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/ai.js"></script>
+</body>
+</html>

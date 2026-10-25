@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RPG Campaign Overworld & Learning Analytics Dashboard - SmartCode Studio</title>
+  <meta name="description" content="Gamified RPG learning campaign map, AI academic coach, and behavioral learning analytics dashboard for SmartCode Studio.">
+
+  <!-- Fonts & Icons: DM Sans & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header class="dash-header">
+    <div class="brand-section">
+      <div class="brand-icon">
+        <i class="fa-solid fa-map-location-dot"></i>
+      </div>
+      <div class="brand-title">
+        SmartCode <span>Overworld</span>
+      </div>
+    </div>
+
+    <!-- Gamification Bar -->
+    <div class="user-gamification-bar">
+      <!-- Streak Flame -->
+      <div class="stat-pill streak-pill" title="18-day continuous coding streak">
+        <span class="streak-flame">🔥</span>
+        <span>18 Days</span>
+      </div>
+
+      <!-- Golden Stars -->
+      <div class="stat-pill stars-pill" title="Total Stars Earned">
+        <i class="fa-solid fa-star"></i>
+        <span>42 / 60 Stars</span>
+      </div>
+
+      <!-- XP & Tier -->
+      <div class="stat-pill xp-tier-pill">
+        <span class="tier-badge">Lvl 14 Byte Sorcerer</span>
+        <div class="xp-bar-wrapper">
+          <div class="xp-bar-track">
+            <div class="xp-bar-fill"></div>
+          </div>
+          <span class="xp-text">7,420 / 10,000 XP</span>
+        </div>
+      </div>
+
+      <!-- Quiz Arena Link -->
+      <a href="quiz.html" class="stat-pill" style="text-decoration: none; color: var(--accent-gold); border-color: rgba(251, 191, 36, 0.4);" title="Open 30-Question Quiz Arena">
+        <i class="fa-solid fa-trophy"></i>
+        <span>Quiz Arena (30 Qs)</span>
+      </a>
+
+      <!-- Launch IDE -->
+      <a href="index.html" class="btn-launch-ide" title="Open Code Editor & Learning IDE">
+        <i class="fa-solid fa-code"></i> Launch IDE
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Layout Grid -->
+  <main class="dashboard-grid">
+    
+    <!-- LEFT: RPG Campaign Overworld Map -->
+    <section class="campaign-section">
+      <div class="world-selector-header">
+        <div class="world-title-box">
+          <h2>World 1: The Silicon Highlands</h2>
+          <p>Python Core & Data Engineering Foundations • Chapter 1 of 4</p>
+        </div>
+        <div class="world-tabs">
+          <button class="world-tab-btn active">World 1: Python</button>
+          <button class="world-tab-btn">World 2: SQL Citadel</button>
+          <button class="world-tab-btn">World 3: Full-Stack Realm</button>
+        </div>
+      </div>
+
+      <!-- Winding Path RPG Viewport -->
+      <div class="overworld-map-viewport" id="overworld-map-viewport">
+        <!-- SVG Canvas for Smooth Bezier Paths -->
+        <svg class="map-svg-canvas" id="map-svg-canvas"></svg>
+
+        <!-- Dynamic Stepping Stone Nodes Layer -->
+        <div class="map-nodes-layer" id="map-nodes-layer"></div>
+      </div>
+    </section>
+
+    <!-- RIGHT: AI Coach & Learning Analytics -->
+    <aside class="analytics-column">
+      
+      <!-- 1. AI Academic Coach Card -->
+      <div class="analytics-card ai-coach-card">
+        <div class="card-heading">
+          <h3><i class="fa-solid fa-wand-magic-sparkles text-purple"></i> AI Academic Coach</h3>
+          <span class="coach-status-tag">Active Analysis</span>
+        </div>
+
+        <div class="coach-insight-box">
+          <div class="coach-avatar-row">
+            <div class="ai-orb"></div>
+            <span class="coach-title">Socratic Pattern Diagnosis</span>
+          </div>
+          <p class="coach-advice-text">
+            "You frequently face <strong>IndexError: list index out of range</strong> when slicing matrix bounds. Remember: Python upper bounds in <code>range(len)</code> are non-inclusive."
+          </p>
+        </div>
+
+        <div class="micro-drill-card">
+          <div class="drill-info">
+            <strong>Targeted Micro-Drill (5 min)</strong>
+            <span>Safe Matrix Boundary Traversal</span>
+          </div>
+          <button class="btn-start-drill" id="btn-start-drill">Start Drill</button>
+        </div>
+      </div>
+
+      <!-- 2. Behavioral Learning Metrics -->
+      <div class="analytics-card">
+        <div class="card-heading">
+          <h3><i class="fa-solid fa-chart-simple"></i> Behavioral Metrics</h3>
+        </div>
+
+        <div class="metrics-quad-grid">
+          <div class="metric-tile">
+            <div class="metric-top-label">
+              <span>Run-to-Pass</span>
+              <i class="fa-solid fa-rotate text-cyan"></i>
+            </div>
+            <div class="metric-big-val">2.4x</div>
+            <div class="metric-sub-note">Top 12% Debugging Velocity</div>
+          </div>
+
+          <div class="metric-tile">
+            <div class="metric-top-label">
+              <span>AI Independence</span>
+              <i class="fa-solid fa-brain text-purple"></i>
+            </div>
+            <div class="metric-big-val">84%</div>
+            <div class="metric-sub-note">Autonomous Solution Solving</div>
+          </div>
+
+          <div class="metric-tile">
+            <div class="metric-top-label">
+              <span>Peak Focus Window</span>
+              <i class="fa-regular fa-clock text-gold"></i>
+            </div>
+            <div class="metric-big-val">9 - 11 PM</div>
+            <div class="metric-sub-note">Night Owl Cognitive Peak</div>
+          </div>
+
+          <div class="metric-tile">
+            <div class="metric-top-label">
+              <span>Streak Health</span>
+              <i class="fa-solid fa-fire text-orange"></i>
+            </div>
+            <div class="metric-big-val">100%</div>
+            <div class="metric-sub-note">No Streak Freeze Used</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Modern Dark-Themed Skill Mastery Radar Chart Component -->
+      <div class="skill-radar-card" id="skill-radar-card" aria-label="Skill Mastery Radar Chart">
+        <div class="radar-card-header">
+          <i class="fa-regular fa-compass radar-compass-icon" aria-hidden="true"></i>
+          <h2 class="radar-card-title">SKILL MASTERY RADAR</h2>
+        </div>
+        <div class="radar-canvas-container" id="radar-canvas-container">
+          <canvas id="radarChart" width="460" height="290"></canvas>
+          <div id="radar-tooltip" class="radar-tooltip" style="display: none;"></div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- FULL WIDTH: GitHub-Style 52-Week Contribution Heatmap -->
+    <section class="heatmap-container">
+      <div class="card-heading">
+        <h3><i class="fa-regular fa-calendar-check"></i> Consistency Heatmap (1,248 Executions & Submissions)</h3>
+        <span style="font-size: 11px; color: #94a3b8;">Less <span style="color: #161b22;">■</span> <span style="color: #0e4429;">■</span> <span style="color: #006d32;">■</span> <span style="color: #26a641;">■</span> <span style="color: #39d353;">■</span> More</span>
+      </div>
+      <div class="heatmap-scroll-area">
+        <div class="heatmap-grid" id="heatmap-grid"></div>
+      </div>
+    </section>
+
+    <!-- FULL WIDTH: 3D Trophy Showcase -->
+    <section class="heatmap-container">
+      <div class="card-heading">
+        <h3><i class="fa-solid fa-trophy text-gold"></i> Trophy Room & Capstone Honors</h3>
+        <span class="coach-status-tag">3 of 8 Unlocked</span>
+      </div>
+      <div class="trophy-row">
+        <div class="trophy-card">
+          <span class="trophy-icon-3d">🏆</span>
+          <div class="trophy-name">Grandmaster of Indentation</div>
+          <div class="trophy-desc">Conquered all Python syntax traps without a single indentation error.</div>
+        </div>
+        <div class="trophy-card">
+          <span class="trophy-icon-3d">⚡</span>
+          <div class="trophy-name">Lightning Executioner</div>
+          <div class="trophy-desc">Solved timed boss challenge with more than 5 minutes remaining.</div>
+        </div>
+        <div class="trophy-card">
+          <span class="trophy-icon-3d">🛡️</span>
+          <div class="trophy-name">Zero-Hint Paladin</div>
+          <div class="trophy-desc">Completed an entire chapter without unlocking a single hint.</div>
+        </div>
+        <div class="trophy-card locked">
+          <span class="trophy-icon-3d">🔒</span>
+          <div class="trophy-name">Neural Network Overlord</div>
+          <div class="trophy-desc">Locked: Defeat World 4 Capstone Dungeon to claim this honor.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Interactive Node Detail Modal Drawer -->
+  <div class="node-modal-backdrop" id="node-modal-backdrop">
+    <div class="node-modal-card">
+      <button class="close-modal-btn" id="btn-close-modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <span class="modal-header-badge standard" id="modal-badge">STANDARD DUNGEON</span>
+      <h2 class="modal-title" id="modal-title">6. The Nested Loop Trial</h2>
+      <p class="modal-desc" id="modal-desc">
+        Traverse 2D matrices and grids with O(N^2) complexity optimization, boundary guards, and memory efficiency checks.
+      </p>
+
+      <div class="modal-rules-grid">
+        <div class="rule-box">
+          <i class="fa-solid fa-bolt text-gold"></i>
+          <span>Reward</span>
+          <strong id="modal-xp-val">+350 XP</strong>
+        </div>
+        <div class="rule-box">
+          <i class="fa-solid fa-star text-gold"></i>
+          <span>Rating Goal</span>
+          <strong>3 Stars</strong>
+        </div>
+        <div class="rule-box">
+          <i class="fa-solid fa-shield text-cyan"></i>
+          <span>Attempts</span>
+          <strong>Unlimited</strong>
+        </div>
+      </div>
+
+      <div style="font-size: 12px; color: #94a3b8; margin-bottom: 20px; text-align: center;" id="modal-status-note">
+        Complete without recursion limit errors.
+      </div>
+
+      <button class="modal-action-btn" id="modal-action-btn">
+        <i class="fa-solid fa-play"></i> Enter Arena in IDE
+      </button>
+    </div>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

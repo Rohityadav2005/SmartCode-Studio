@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coding Quiz Arena - SmartCode Studio</title>
+  <meta name="description" content="Dedicated 30-question coding quiz arena with multi-level progression, instant Socratic feedback, and XP rewards.">
+
+  <!-- Fonts & Icons: DM Sans & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="quiz.css">
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header class="quiz-header">
+    <div class="header-left">
+      <a href="index.html" class="brand-badge" title="SmartCode Studio Home">
+        <div class="brand-icon">
+          <i class="fa-solid fa-trophy"></i>
+        </div>
+        <div class="brand-title">
+          SmartCode <span>Quiz Arena</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Gamification Bar -->
+    <div class="header-right">
+      <div class="stat-pill streak-pill" title="Daily Coding Streak">
+        <span>🔥</span>
+        <span>18 Days</span>
+      </div>
+
+      <div class="stat-pill xp-counter-pill" title="Current Developer Profile XP">
+        <i class="fa-solid fa-bolt text-gold"></i>
+        <span><strong id="quiz-user-xp">140</strong> XP</span>
+      </div>
+
+      <a href="dashboard.html" class="nav-link-btn" title="View RPG Campaign Map & Analytics">
+        <i class="fa-solid fa-map-location-dot"></i> RPG Campaign
+      </a>
+
+      <a href="index.html" class="nav-link-btn" title="Back to Code Editor & Execution">
+        <i class="fa-solid fa-code"></i> Launch IDE
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="quiz-main-container">
+    
+    <!-- Level Selector Bar -->
+    <section class="level-selection-bar">
+      <div class="level-tabs-group" id="level-tabs-group">
+        <!-- Rendered dynamically via js/quiz.js -->
+      </div>
+
+      <div class="level-meta-info">
+        <span class="badge-pill" id="level-badge" style="background: rgba(99, 102, 241, 0.2); color: #818cf8; padding: 4px 12px; border-radius: 12px; font-weight: 700; font-size: 11px;">Novice Coder</span>
+        <div class="reward-callout">
+          <i class="fa-solid fa-gift"></i>
+          <span>Complete 30 Qs for <strong>+30 XP</strong></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Level Info Banner -->
+    <div class="level-banner" style="background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 14px 20px;">
+      <h2 id="level-title" style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px;">Level 1: Syntax & Core Fundamentals</h2>
+      <p id="level-desc" style="font-size: 13px; color: var(--text-secondary); margin: 0;">Master Python variables, operators, strings, indentation rules, and basic expressions.</p>
+    </div>
+
+    <!-- Arena Two-Column Layout -->
+    <div class="arena-grid">
+      
+      <!-- Left Column: Active Question Arena Card -->
+      <section class="question-arena-card">
+        <div class="question-card-top">
+          <span class="question-index-tag" id="question-num-tag">Question 1 of 30</span>
+          <span class="question-category-badge" id="question-category-badge">Level 1 • QID #1</span>
+        </div>
+
+        <div>
+          <h2 class="question-prompt" id="question-prompt">Loading question...</h2>
+          <div class="code-snippet-box" id="code-snippet-box" style="display: none;"></div>
+        </div>
+
+        <!-- 4 Multiple Choice Options -->
+        <div class="options-list" id="options-list"></div>
+
+        <!-- Socratic Explanation Box -->
+        <div class="explanation-box" id="explanation-box">
+          <div class="explanation-header" id="explanation-header">
+            <i class="fa-solid fa-circle-check"></i> Explanation
+          </div>
+          <p class="explanation-text" id="explanation-text"></p>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="question-footer-controls">
+          <button class="btn-quiz-nav btn-prev" id="btn-prev-q">
+            <i class="fa-solid fa-arrow-left"></i> Previous
+          </button>
+          <button class="btn-quiz-nav btn-next" id="btn-next-q">
+            Next <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- Right Column: Level Progress & 30-Question Grid -->
+      <aside class="quiz-sidebar">
+        <!-- Progress Card -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">
+            <span>Level Progress</span>
+            <i class="fa-solid fa-chart-line text-cyan"></i>
+          </div>
+
+          <div class="progress-stats-box">
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
+            <div class="progress-text-row">
+              <span id="progress-text">0 / 30 Answered</span>
+              <span id="accuracy-text">0% Accuracy</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 30-Question Navigator Grid -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">
+            <span>30-Question Matrix</span>
+            <span style="font-size: 11px; color: #94a3b8;">1 - 30</span>
+          </div>
+
+          <div class="questions-grid" id="questions-grid">
+            <!-- 30 cells generated by js/quiz.js -->
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- Level 30/30 Completion Modal (+30 XP Reward) -->
+  <div class="completion-modal-backdrop" id="completion-modal">
+    <div class="completion-modal-card">
+      <span class="trophy-emoji-big">🏆</span>
+      <h2 style="font-size: 24px; font-weight: 800; color: #fff;">Level Conquered!</h2>
+      <p style="color: #94a3b8; font-size: 14px; margin: 8px 0;">
+        You have successfully completed all 30 questions in this level.
+      </p>
+
+      <div class="reward-glow-badge">
+        <i class="fa-solid fa-bolt"></i>
+        <span>+30 XP REWARD EARNED</span>
+      </div>
+
+      <div id="modal-score-summary" style="font-size: 13px; color: #cbd5e1; line-height: 1.6; margin-bottom: 20px;">
+        30 questions completed!
+      </div>
+
+      <button class="btn-claim-xp" id="btn-claim-xp">
+        Claim +30 XP & Continue <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <script src="js/quiz_data.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>
