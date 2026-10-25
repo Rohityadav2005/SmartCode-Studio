@@ -475,4 +475,38 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "index.html";
     });
   }
+
+  // 5. Cyberpunk Ambient Background Video Controller
+  const bgVideo = document.getElementById("cyberpunk-bg-video");
+  const toggleBtn = document.getElementById("btn-toggle-video");
+  const toggleIcon = document.getElementById("video-toggle-icon");
+  const toggleText = document.getElementById("video-toggle-text");
+
+  if (bgVideo) {
+    // Safely attempt autoplay
+    const playPromise = bgVideo.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => {
+        console.info("Autoplay deferred until user interaction:", err);
+      });
+    }
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", () => {
+        if (bgVideo.paused) {
+          bgVideo.play();
+          bgVideo.classList.remove("dimmed");
+          toggleBtn.classList.remove("paused");
+          if (toggleIcon) toggleIcon.className = "fa-solid fa-video";
+          if (toggleText) toggleText.textContent = "Cyberpunk FX";
+        } else {
+          bgVideo.pause();
+          bgVideo.classList.add("dimmed");
+          toggleBtn.classList.add("paused");
+          if (toggleIcon) toggleIcon.className = "fa-solid fa-video-slash";
+          if (toggleText) toggleText.textContent = "FX Paused";
+        }
+      });
+    }
+  }
 });

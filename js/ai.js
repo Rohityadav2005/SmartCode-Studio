@@ -10,7 +10,7 @@ window.SmartCodeAI = (function () {
   let conversation = [
     {
       role: "assistant",
-      content: "Hello! I am your **Qwen2.5-Coder** assistant. I have live visibility into your active editor code. You can ask me to debug errors, explain logic, optimize code, or guide you through lessons."
+      content: "Hello! I am your **atelier ai** assistant. I have live visibility into your active editor code. You can ask me to debug errors, explain logic, optimize code, or guide you through lessons."
     }
   ];
 
@@ -403,7 +403,7 @@ window.SmartCodeAI = (function () {
     const messagesPayload = [
       {
         role: "system",
-        content: "You are Qwen2.5-Coder, an expert programming mentor inside SmartCode Studio IDE. Provide direct, concise, and helpful responses. Highlight file names, identifiers, and code using markdown inline code or fenced blocks. Format with structured bullets and headers."
+        content: "You are atelier ai, an expert programming mentor inside SmartCode Studio IDE. Provide direct, concise, and helpful responses. Highlight file names, identifiers, and code using markdown inline code or fenced blocks. Format with structured bullets and headers."
       }
     ];
 
@@ -517,7 +517,7 @@ window.SmartCodeAI = (function () {
       } else {
         console.error("AI chat error:", err);
         textContainer.innerHTML = renderMarkdown(
-          `*Note: Could not reach Qwen2.5-Coder directly (${err.message}). Make sure Ollama is running \`ollama run qwen2.5-coder:3b\`.*`
+          `*Note: Could not reach atelier ai directly (${err.message}). Make sure Ollama is running \`ollama run qwen2.5-coder:3b\`.*`
         );
       }
       attachCodeBlockButtons(assistantMsg);

@@ -16,6 +16,16 @@
 </head>
 <body>
 
+  <!-- Cyberpunk Pixel Room Animated Video Background -->
+  <div class="video-bg-container" aria-hidden="true">
+    <video id="cyberpunk-bg-video" class="video-bg" autoplay muted loop playsinline preload="auto">
+      <source src="Cyberpunk Pixel Room – Neon City View _ Retro Gaming Setup _ Animated Background Loop(1080P_HD).mp4" type="video/mp4">
+      <source src="Cyberpunk%20Pixel%20Room%20%E2%80%93%20Neon%20City%20View%20_%20Retro%20Gaming%20Setup%20_%20Animated%20Background%20Loop(1080P_HD).mp4" type="video/mp4">
+    </video>
+    <div class="video-bg-overlay"></div>
+    <div class="video-grid-overlay"></div>
+  </div>
+
   <!-- Top Global Header -->
   <header class="dash-header">
     <div class="brand-section">
@@ -29,6 +39,12 @@
 
     <!-- Gamification Bar -->
     <div class="user-gamification-bar">
+      <!-- Cyberpunk Ambience Toggle -->
+      <button type="button" class="stat-pill video-toggle-pill" id="btn-toggle-video" title="Toggle Cyberpunk Video Motion">
+        <i class="fa-solid fa-video" id="video-toggle-icon"></i>
+        <span id="video-toggle-text">Cyberpunk FX</span>
+      </button>
+
       <!-- Streak Flame -->
       <div class="stat-pill streak-pill" title="18-day continuous coding streak">
         <span class="streak-flame">🔥</span>
